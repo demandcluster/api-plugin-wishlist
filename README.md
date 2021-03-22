@@ -1,4 +1,4 @@
-# api-plugin-carts
+# api-plugin-wishlist
 
 [![npm (scoped)](https://img.shields.io/npm/v/@reactioncommerce/api-plugin-carts.svg)](https://www.npmjs.com/package/@reactioncommerce/api-plugin-carts)
 [![CircleCI](https://circleci.com/gh/reactioncommerce/api-plugin-carts.svg?style=svg)](https://circleci.com/gh/reactioncommerce/api-plugin-carts)
