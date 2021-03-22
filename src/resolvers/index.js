@@ -1,17 +1,17 @@
-import Cart from "./Cart/index.js";
-import CartItem from "./CartItem/index.js";
+import wishlist from "./wishlist/index.js";
+import wishlistItem from "./wishlistItem/index.js";
 import FulfillmentGroup from "./FulfillmentGroup/index.js";
 import Mutation from "./Mutation/index.js";
 import Query from "./Query/index.js";
 
 /**
- * Cart related GraphQL resolvers
- * @namespace Cart/GraphQL
+ * wishlist related GraphQL resolvers
+ * @namespace wishlist/GraphQL
  */
 
 export default {
-  Cart,
-  CartItem,
+  wishlist,
+  wishlistItem,
   FulfillmentGroup,
   Mutation,
   PaymentMethodData: {

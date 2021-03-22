@@ -49,7 +49,7 @@ const Metafield = new SimpleSchema({
 });
 
 /**
- * @name CartAddress
+ * @name wishlistAddress
  * @memberof Schemas
  * @type {SimpleSchema}
  * @property {String} _id
@@ -70,7 +70,7 @@ const Metafield = new SimpleSchema({
  * @property {Boolean} failedValidation
  * @property {Metafield[]} metafields
  */
-export const CartAddress = new SimpleSchema({
+export const wishlistAddress = new SimpleSchema({
   "_id": {
     type: String,
     optional: true
@@ -170,7 +170,7 @@ export const CartAddress = new SimpleSchema({
  * @memberof Schemas
  * @type {SimpleSchema}
  * @todo Move Shippo-related schema to Shippo module
- * @summary This will only exist in ShippingMethods Inside Cart/Order.
+ * @summary This will only exist in ShippingMethods Inside wishlist/Order.
  * This does not exist in DB Shipping Collection as Shippo Methods are Dynamic.
  * @property {String} serviceLevelToken optional
  * @property {String} rateId optional
@@ -198,7 +198,7 @@ const ShippoShippingMethod = new SimpleSchema({
  * @property {Number} handling optional, default value: `0`
  * @property {Number} rate Rate
  * @property {Boolean} enabled default value: `false`
- * @property {Array} validRanges optional, Matching cart ranges
+ * @property {Array} validRanges optional, Matching wishlist ranges
  * @property {Object} validRanges.$ optional
  * @property {Number} validRanges.begin optional
  * @property {Number} validRanges.end optional
@@ -256,7 +256,7 @@ const ShippingMethod = new SimpleSchema({
   "validRanges": {
     type: Array,
     optional: true,
-    label: "Matching Cart Ranges"
+    label: "Matching wishlist Ranges"
   },
   "validRanges.$": {
     type: Object,
@@ -301,7 +301,7 @@ const ShippingMethod = new SimpleSchema({
     label: "Delivery Est.",
     optional: true
   },
-  "carrier": { // kind of denormalizing, useful for having it in shipmentMethod( cart & order)
+  "carrier": { // kind of denormalizing, useful for having it in shipmentMethod( wishlist & order)
     type: String, // Alternatively we can make an extra Schema:ShipmentMethod, that inherits
     optional: true // ShippingMethod and add the optional carrier field
   },
@@ -460,7 +460,7 @@ const Workflow = new SimpleSchema({
 });
 
 /**
- * @name CartInvoice
+ * @name wishlistInvoice
  * @type {SimpleSchema}
  * @memberof Schemas
  * @property {Number} discounts Total of all discounts (a positive number, but subtracted from the grand total)
@@ -472,7 +472,7 @@ const Workflow = new SimpleSchema({
  * @property {Number} taxes Total tax
  * @property {Number} total Grand total
  */
-export const CartInvoice = new SimpleSchema({
+export const wishlistInvoice = new SimpleSchema({
   currencyCode: String,
   discounts: {
     type: Number,
@@ -510,7 +510,7 @@ export const CartInvoice = new SimpleSchema({
 
 /**
  * @name Shipment
- * @summary Used for cart/order shipment tracking
+ * @summary Used for wishlist/order shipment tracking
  * @memberof Schemas
  * @type {SimpleSchema}
  * @property {String} _id Shipment ID
@@ -525,8 +525,8 @@ export const CartInvoice = new SimpleSchema({
  * @property {ShippingParcel} parcel optional
  * @property {Workflow} workflow optional
  * @property {Invoice} invoice optional
- * @property {String[]} itemIds Required on an order but not on a cart, this is set to a denormalized
- *   list of item IDs when a cart is converted to an order
+ * @property {String[]} itemIds Required on an order but not on a wishlist, this is set to a denormalized
+ *   list of item IDs when a wishlist is converted to an order
  * @property {Object[]} transactions optional
  * @property {String} shippingLabelUrl For printable Shipping label
  * @property {String} customsLabelUrl For customs printable label
@@ -546,7 +546,7 @@ const Shipment = new SimpleSchema({
     optional: true
   },
   "address": {
-    type: CartAddress,
+    type: wishlistAddress,
     optional: true
   },
   "shipmentMethod": {
@@ -585,7 +585,7 @@ const Shipment = new SimpleSchema({
     defaultValue: {}
   },
   "invoice": {
-    type: CartInvoice,
+    type: wishlistInvoice,
     optional: true
   },
   "itemIds": {
@@ -625,13 +625,13 @@ const Money = new SimpleSchema({
 });
 
 /**
- * @name CartItemAttribute
+ * @name wishlistItemAttribute
  * @memberof Schemas
  * @type {SimpleSchema}
  * @property {String} label required
  * @property {String} value optional
  */
-const CartItemAttribute = new SimpleSchema({
+const wishlistItemAttribute = new SimpleSchema({
   label: String,
   value: {
     type: String,
@@ -640,38 +640,38 @@ const CartItemAttribute = new SimpleSchema({
 });
 
 /**
- * @name CartItem
+ * @name wishlistItem
  * @memberof Schemas
  * @type {SimpleSchema}
  * @property {String} _id required
  * @property {String} addedAt required
- * @property {CartItemAttribute[]} attributes Attributes of this item
+ * @property {wishlistItemAttribute[]} attributes Attributes of this item
  * @property {String} createdAt required
  * @property {Metafield[]} metafields
  * @property {String} optionTitle optionTitle from the selected variant
  * @property {ShippingParcel} parcel Currently, parcel is in simple product schema. Need to include it here as well.
  * @property {Money} price The current price of this item
- * @property {Money} priceWhenAdded The price+currency at the moment this item was added to this cart
+ * @property {Money} priceWhenAdded The price+currency at the moment this item was added to this wishlist
  * @property {String} productId required
  * @property {String} productSlug Product slug
  * @property {String} productType Product type
  * @property {String} productVendor Product vendor
  * @property {Number} quantity required
- * @property {String} shopId Cart Item shopId
- * @property {String} title Cart Item title
+ * @property {String} shopId wishlist Item shopId
+ * @property {String} title wishlist Item title
  * @property {Object} transaction Transaction associated with this item
  * @property {String} updatedAt required
  * @property {String} variantId required
  * @property {String} variantTitle Title from the selected variant
  */
-export const CartItem = new SimpleSchema({
+export const wishlistItem = new SimpleSchema({
   "_id": String,
   "addedAt": Date,
   "attributes": {
     type: Array,
     optional: true
   },
-  "attributes.$": CartItemAttribute,
+  "attributes.$": wishlistItemAttribute,
   "compareAtPrice": {
     type: Money,
     optional: true
@@ -720,12 +720,12 @@ export const CartItem = new SimpleSchema({
   },
   "shopId": {
     type: String,
-    label: "Cart Item shopId"
+    label: "wishlist Item shopId"
   },
   "subtotal": Money,
   "title": {
     type: String,
-    label: "CartItem Title"
+    label: "wishlistItem Title"
   },
   "transaction": {
     type: Object,
@@ -744,15 +744,15 @@ export const CartItem = new SimpleSchema({
 });
 
 /**
- * @name Cart
+ * @name wishlist
  * @memberof Schemas
  * @type {SimpleSchema}
  * @property {String} _id required
- * @property {String} shopId required, Cart ShopId
- * @property {String} accountId Account ID for account carts, or null for anonymous
- * @property {String} anonymousAccessToken Token for accessing anonymous carts, null for account carts
+ * @property {String} shopId required, wishlist ShopId
+ * @property {String} accountId Account ID for account wishlists, or null for anonymous
+ * @property {String} anonymousAccessToken Token for accessing anonymous wishlists, null for account wishlists
  * @property {String} email optional
- * @property {CartItem[]} items Array of CartItem optional
+ * @property {wishlistItem[]} items Array of wishlistItem optional
  * @property {Shipment[]} shipping Array of Shipment optional, blackbox
  * @property {Payment[]} billing Array of Payment optional, blackbox
  * @property {Number} discount optional
@@ -762,14 +762,14 @@ export const CartItem = new SimpleSchema({
  * @property {Date} updatedAt optional
  * @property {String} sessionId Optional and deprecated
  */
-export const Cart = new SimpleSchema({
+export const wishlist = new SimpleSchema({
   "_id": {
     type: String,
     optional: true
   },
   "shopId": {
     type: String,
-    label: "Cart ShopId"
+    label: "wishlist ShopId"
   },
   "accountId": {
     type: String,
@@ -781,7 +781,7 @@ export const Cart = new SimpleSchema({
   },
   "currencyCode": String,
   "billingAddress": {
-    type: CartAddress,
+    type: wishlistAddress,
     optional: true
   },
   "referenceId": {
@@ -802,14 +802,14 @@ export const Cart = new SimpleSchema({
     optional: true
   },
   "items.$": {
-    type: CartItem
+    type: wishlistItem
   },
   "missingItems": {
     type: Array,
     optional: true
   },
   "missingItems.$": {
-    type: CartItem
+    type: wishlistItem
   },
   "shipping": {
     type: Array,
@@ -818,7 +818,7 @@ export const Cart = new SimpleSchema({
   "shipping.$": {
     type: Shipment
   },
-  /* Working to get rid of cart.billing, but currently still where discounts are applied to carts */
+  /* Working to get rid of wishlist.billing, but currently still where discounts are applied to wishlists */
   "billing": {
     type: Array,
     optional: true

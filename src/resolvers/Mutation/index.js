@@ -1,17 +1,17 @@
-import addCartItems from "./addCartItems.js";
-import createCart from "./createCart.js";
-import reconcileCarts from "./reconcileCarts.js";
-import removeCartItems from "./removeCartItems.js";
-import setEmailOnAnonymousCart from "./setEmailOnAnonymousCart.js";
-import setShippingAddressOnCart from "./setShippingAddressOnCart.js";
-import updateCartItemsQuantity from "./updateCartItemsQuantity.js";
+import addwishlistItems from "./addwishlistItems.js";
+import createwishlist from "./createwishlist.js";
+import reconcilewishlists from "./reconcilewishlists.js";
+import removewishlistItems from "./removewishlistItems.js";
+import setEmailOnAnonymouswishlist from "./setEmailOnAnonymouswishlist.js";
+import setShippingAddressOnwishlist from "./setShippingAddressOnwishlist.js";
+import updatewishlistItemsQuantity from "./updatewishlistItemsQuantity.js";
 
 export default {
-  addCartItems,
-  createCart,
-  reconcileCarts,
-  removeCartItems,
-  setEmailOnAnonymousCart,
-  setShippingAddressOnCart,
-  updateCartItemsQuantity
+  addwishlistItems,
+  createwishlist,
+  reconcilewishlists,
+  removewishlistItems,
+  setEmailOnAnonymouswishlist,
+  setShippingAddressOnwishlist,
+  updatewishlistItemsQuantity
 };

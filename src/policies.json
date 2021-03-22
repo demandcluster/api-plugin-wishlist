@@ -1,8 +1,8 @@
 [
   {
-    "description": "Cart managers acting on specific entities.",
-    "subjects": [ "reaction:groups:cart-managers" ],
-    "resources": [ "reaction:legacy:carts:*" ],
+    "description": "wishlist managers acting on specific entities.",
+    "subjects": [ "reaction:groups:wishlist-managers" ],
+    "resources": [ "reaction:legacy:wishlists:*" ],
     "actions": [
       "read",
       "update"
@@ -10,9 +10,9 @@
     "effect": "allow"
   },
   {
-    "description": "Cart owner acting on their cart.",
+    "description": "wishlist owner acting on their wishlist.",
     "subjects": [ "reaction:users:*" ],
-    "resources": [ "reaction:legacy:carts:*" ],
+    "resources": [ "reaction:legacy:wishlists:*" ],
     "actions": [
       "read"
     ],

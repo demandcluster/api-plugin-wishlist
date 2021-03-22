@@ -1,7 +1,7 @@
-import accountCartByAccountId from "./accountCartByAccountId.js";
-import anonymousCartByCartId from "./anonymousCartByCartId.js";
+import accountwishlistByAccountId from "./accountwishlistByAccountId.js";
+import anonymouswishlistBywishlistId from "./anonymouswishlistBywishlistId.js";
 
 export default {
-  accountCartByAccountId,
-  anonymousCartByCartId
+  accountwishlistByAccountId,
+  anonymouswishlistBywishlistId
 };

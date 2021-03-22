@@ -1,9 +1,9 @@
-import accountCartByAccountId from "./accountCartByAccountId.js";
-import anonymousCartByCartId from "./anonymousCartByCartId.js";
-import getCommonOrderForCartGroup from "./getCommonOrderForCartGroup.js";
+import accountwishlistByAccountId from "./accountwishlistByAccountId.js";
+import anonymouswishlistBywishlistId from "./anonymouswishlistBywishlistId.js";
+import getCommonOrderForwishlistGroup from "./getCommonOrderForwishlistGroup.js";
 
 export default {
-  accountCartByAccountId,
-  anonymousCartByCartId,
-  getCommonOrderForCartGroup
+  accountwishlistByAccountId,
+  anonymouswishlistBywishlistId,
+  getCommonOrderForwishlistGroup
 };

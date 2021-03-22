@@ -1,8 +1,8 @@
 import Logger from "@reactioncommerce/logger";
-import updateCartItemsForVariantChanges from "./util/updateCartItemsForVariantChanges.js";
-import { MAX_CART_COUNT as SAVE_MANY_CARTS_LIMIT } from "./mutations/saveManyCarts.js";
+import updatewishlistItemsForVariantChanges from "./util/updatewishlistItemsForVariantChanges.js";
+import { MAX_wishlist_COUNT as SAVE_MANY_wishlistS_LIMIT } from "./mutations/saveManywishlists.js";
 
-const logCtx = { name: "cart", file: "startup" };
+const logCtx = { name: "wishlist", file: "startup" };
 
 /**
  * @param {Object[]} catalogProductVariants The `product.variants` array from a catalog item
@@ -24,66 +24,66 @@ function getFlatVariantsAndOptions(catalogProductVariants) {
 }
 
 /**
- * @param {Object} Cart Cart collection
+ * @param {Object} wishlist wishlist collection
  * @param {Object} context App context
  * @param {String} variant The catalog product variant or option
  * @returns {Promise<null>} Promise that resolves with null
  */
-async function updateAllCartsForVariant({ Cart, context, variant }) {
+async function updateAllwishlistsForVariant({ wishlist, context, variant }) {
   const { mutations, queries } = context;
   const { variantId } = variant;
 
-  Logger.debug({ ...logCtx, variantId, fn: "updateAllCartsForVariant" }, "Running updateAllCartsForVariant");
+  Logger.debug({ ...logCtx, variantId, fn: "updateAllwishlistsForVariant" }, "Running updateAllwishlistsForVariant");
 
-  let updatedCarts = [];
+  let updatedwishlists = [];
 
   /**
-   * @summary Bulk save an array of updated carts
+   * @summary Bulk save an array of updated wishlists
    * @return {undefined}
    */
-  async function saveCarts() {
-    if (updatedCarts.length === 0) return;
-    await mutations.saveManyCarts(context, updatedCarts);
-    updatedCarts = [];
+  async function savewishlists() {
+    if (updatedwishlists.length === 0) return;
+    await mutations.saveManywishlists(context, updatedwishlists);
+    updatedwishlists = [];
   }
 
   /**
-   * @summary Get updated prices for a single cart, and check whether there are any changes.
+   * @summary Get updated prices for a single wishlist, and check whether there are any changes.
    *   If so, push into `bulkWrites` array.
-   * @param {Object} cart The cart
+   * @param {Object} wishlist The wishlist
    * @return {undefined}
    */
-  async function updateOneCart(cart) {
-    const prices = await queries.getVariantPrice(context, variant, cart.currencyCode);
+  async function updateOnewishlist(wishlist) {
+    const prices = await queries.getVariantPrice(context, variant, wishlist.currencyCode);
     if (!prices) return;
 
-    const { didUpdate, updatedItems } = updateCartItemsForVariantChanges(cart.items, variant, prices);
+    const { didUpdate, updatedItems } = updatewishlistItemsForVariantChanges(wishlist.items, variant, prices);
     if (!didUpdate) return;
 
-    updatedCarts.push({ ...cart, items: updatedItems });
+    updatedwishlists.push({ ...wishlist, items: updatedItems });
   }
 
-  // Do find + update because we need the `cart.currencyCode` to figure out pricing
+  // Do find + update because we need the `wishlist.currencyCode` to figure out pricing
   // and we need current quantity to recalculate `subtotal` for each item.
   // It should be fine to load all results into an array because even for large shops,
-  // there will likely not be a huge number of the same product in carts at the same time.
-  const cartsCursor = Cart.find({ "items.variantId": variantId });
+  // there will likely not be a huge number of the same product in wishlists at the same time.
+  const wishlistsCursor = wishlist.find({ "items.variantId": variantId });
 
   /* eslint-disable no-await-in-loop */
-  let cart = await cartsCursor.next();
-  while (cart) {
-    await updateOneCart(cart);
+  let wishlist = await wishlistsCursor.next();
+  while (wishlist) {
+    await updateOnewishlist(wishlist);
 
-    if (updatedCarts.length === SAVE_MANY_CARTS_LIMIT) {
-      await saveCarts();
+    if (updatedwishlists.length === SAVE_MANY_wishlistS_LIMIT) {
+      await savewishlists();
     }
 
-    cart = await cartsCursor.next();
+    wishlist = await wishlistsCursor.next();
   }
   /* eslint-enable no-await-in-loop */
 
-  // Flush remaining cart updates
-  await saveCarts();
+  // Flush remaining wishlist updates
+  await savewishlists();
 
   return null;
 }
@@ -94,22 +94,22 @@ async function updateAllCartsForVariant({ Cart, context, variant }) {
  * @param {Object} context.collections Map of MongoDB collections
  * @returns {undefined}
  */
-export default async function cartStartup(context) {
+export default async function wishlistStartup(context) {
   const { appEvents, collections } = context;
-  const { Cart } = collections;
+  const { wishlist } = collections;
 
-  // When an order is created, delete the source cart
+  // When an order is created, delete the source wishlist
   appEvents.on("afterOrderCreate", async ({ order }) => {
-    const { cartId } = order;
-    if (cartId) {
-      const { result } = await Cart.deleteOne({ _id: cartId });
+    const { wishlistId } = order;
+    if (wishlistId) {
+      const { result } = await wishlist.deleteOne({ _id: wishlistId });
       if (result.ok !== 1) {
-        Logger.warn(`MongoDB error trying to delete cart ${cartId} in "afterOrderCreate" listener. Check MongoDB logs.`);
+        Logger.warn(`MongoDB error trying to delete wishlist ${wishlistId} in "afterOrderCreate" listener. Check MongoDB logs.`);
       }
     }
   });
 
-  // Propagate any price changes to all corresponding cart items
+  // Propagate any price changes to all corresponding wishlist items
   appEvents.on("afterPublishProductToCatalog", async ({ catalogProduct }) => {
     const { _id: catalogProductId, variants } = catalogProduct;
 
@@ -117,7 +117,7 @@ export default async function cartStartup(context) {
 
     const variantsAndOptions = getFlatVariantsAndOptions(variants);
 
-    // Update all cart items that are linked with the updated variants.
-    await Promise.all(variantsAndOptions.map((variant) => updateAllCartsForVariant({ Cart, context, variant })));
+    // Update all wishlist items that are linked with the updated variants.
+    await Promise.all(variantsAndOptions.map((variant) => updateAllwishlistsForVariant({ wishlist, context, variant })));
   });
 }

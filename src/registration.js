@@ -7,21 +7,21 @@ const transformSchema = new SimpleSchema({
 });
 
 // Objects with `name`, `priority` and `fn` properties
-export const cartTransforms = [];
+export const wishlistTransforms = [];
 
 /**
  * @summary Will be called for every plugin
  * @param {Object} options The options object that the plugin passed to registerPackage
  * @returns {undefined}
  */
-export function registerPluginHandlerForCart({ name, cart }) {
-  if (cart) {
-    const { transforms } = cart;
+export function registerPluginHandlerForwishlist({ name, wishlist }) {
+  if (wishlist) {
+    const { transforms } = wishlist;
 
-    if (!Array.isArray(transforms)) throw new Error(`In ${name} plugin registerPlugin object, cart.transforms must be an array`);
+    if (!Array.isArray(transforms)) throw new Error(`In ${name} plugin registerPlugin object, wishlist.transforms must be an array`);
     transformSchema.validate(transforms);
 
-    cartTransforms.push(...transforms);
-    cartTransforms.sort((prev, next) => prev.priority - next.priority);
+    wishlistTransforms.push(...transforms);
+    wishlistTransforms.sort((prev, next) => prev.priority - next.priority);
   }
 }

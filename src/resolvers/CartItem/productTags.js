@@ -3,18 +3,18 @@ import wasFieldRequested from "@reactioncommerce/api-utils/graphql/wasFieldReque
 import xformArrayToConnection from "@reactioncommerce/api-utils/graphql/xformArrayToConnection.js";
 
 /**
- * @name CartItem/productTags
+ * @name wishlistItem/productTags
  * @method
  * @memberof Catalog/GraphQL
- * @summary Returns the tags for a CartItem
- * @param {Object} cartItem - CartItem from parent resolver
+ * @summary Returns the tags for a wishlistItem
+ * @param {Object} wishlistItem - wishlistItem from parent resolver
  * @param {TagConnectionArgs} connectionArgs - arguments sent by the client {@link ConnectionArgs|See default connection arguments}
  * @param {Object} context - an object containing the per-request state
  * @param {Object} info Info about the GraphQL request
  * @returns {Promise<Object[]>} Promise that resolves with array of Tag objects
  */
-export default async function tags(cartItem, connectionArgs, context, info) {
-  const { productTagIds } = cartItem;
+export default async function tags(wishlistItem, connectionArgs, context, info) {
+  const { productTagIds } = wishlistItem;
   if (!productTagIds || productTagIds.length === 0) return xformArrayToConnection(connectionArgs, []);
 
   const query = await context.queries.tagsByIds(context, productTagIds, connectionArgs);
